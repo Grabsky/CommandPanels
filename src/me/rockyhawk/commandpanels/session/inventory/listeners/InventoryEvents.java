@@ -44,14 +44,15 @@ public class InventoryEvents implements Listener {
             // If inventory event was for a panel
             if (event.getInventory().getHolder() instanceof InventoryPanel panel) {
 
+                // Run on close OR on refresh
+                itemSanitiser(player.getInventory());
+                itemDropper(player, event.getInventory());
+
                 // Panel was just refreshed, not closed
                 if(player.getOpenInventory().getTopInventory().getHolder() instanceof InventoryPanel currentPanel
                         && currentPanel == panel){
                     return;
                 }
-
-                itemSanitiser(player.getInventory());
-                itemDropper(player, event.getInventory());
 
                 // Run close commands
                 RequirementRunner requirements = new RequirementRunner(ctx);
