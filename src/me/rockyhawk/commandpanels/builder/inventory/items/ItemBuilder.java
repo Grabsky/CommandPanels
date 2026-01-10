@@ -105,6 +105,8 @@ public class ItemBuilder {
         this.materialComponents.add(new HeadDatabaseComponent());
 
         // Add Item Components
+        // raw components must be applied first - otherwise, all previously set data would be reset
+        this.itemComponents.add(new ComponentsComponent());
         this.itemComponents.add(new EnchantedComponent());
         this.itemComponents.add(new ItemModelComponent());
         this.itemComponents.add(new CustomModelDataComponent());
