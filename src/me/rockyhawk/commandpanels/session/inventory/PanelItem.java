@@ -5,9 +5,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.ClickType;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public record PanelItem(
         String id,
@@ -32,7 +29,6 @@ public record PanelItem(
         String potionColor,
         String potion,
         String tooltipStyle,
-        Map<String, String> components,
         List<String> banner,
         List<String> enchantments
 ) {
@@ -59,7 +55,6 @@ public record PanelItem(
             String potionColor,
             String potion,
             String tooltipStyle,
-            Map<String, String> components,
             List<String> banner,
             List<String> enchantments
     ) {
@@ -85,7 +80,6 @@ public record PanelItem(
         this.potionColor = potionColor;
         this.potion = potion;
         this.tooltipStyle = tooltipStyle;
-        this.components = components;
         this.banner = List.copyOf(banner);
         this.enchantments = List.copyOf(enchantments);
     }
@@ -114,23 +108,7 @@ public record PanelItem(
         String potionColor = section.getString("potion-color", null);
         String potion = section.getString("potion", null);
         String tooltipStyle = section.getString("tooltip-style", null);
-        Map<String, String> components = (section.getConfigurationSection("components") != null)
-                ? section.getConfigurationSection("components").getValues(false).entrySet().stream()
-                        // filtering out anything but strings, booleans and numbers; unfortunately, there's no easy way to convert e.g., map or configuration section to their raw representation
-                        .map(it -> {
-                            // values represented by a single string value (e.g., item_model) must be quoted
-                            // values represented by an array or an object (i.e., lore, custom_name) must not be quoted
-                            // this check is not comprehensive but should work in most cases
-                            if (it.getValue() instanceof String value)
-                                return Map.entry(it.getKey(), (!value.startsWith("{") && !value.startsWith("[")) ? ("\"" + value + "\"") : value);
-                            else if (it.getValue() instanceof Boolean || it.getValue() instanceof Number)
-                                return Map.entry(it.getKey(), it.getValue().toString());
-                            // anything else is considered invalid and should be skipped
-                            return null;
-                        })
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
-                : null;
+
         List<String> banner = section.getStringList("banner");
         List<String> enchanted = section.getStringList("enchantments");
 
@@ -157,7 +135,6 @@ public record PanelItem(
                 potionColor,
                 potion,
                 tooltipStyle,
-                components,
                 banner,
                 enchanted
         );
