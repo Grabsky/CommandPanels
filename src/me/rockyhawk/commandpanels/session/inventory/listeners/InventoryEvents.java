@@ -39,7 +39,7 @@ public class InventoryEvents implements Listener {
 
         // Run in scheduler which delays by one tick
         // This ensures inventory was actually closed and not refreshed
-        Bukkit.getGlobalRegionScheduler().run(ctx.plugin, task -> {
+        player.getScheduler().run(ctx.plugin, task -> {
 
             // If inventory event was for a panel
             if (event.getInventory().getHolder() instanceof InventoryPanel panel) {
@@ -65,7 +65,7 @@ public class InventoryEvents implements Listener {
                 commands.runCommands(panel, player, actions.commands());
             }
 
-        });
+        },null);
     }
 
     @EventHandler
